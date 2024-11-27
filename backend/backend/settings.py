@@ -24,6 +24,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = os.environ.get("SECRET_KEY")
+
+# SECURITY WARNING: keep the secret key used in production secret!
 DEBUG = bool(os.environ.get("DEBUG", "False") == "True")
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -51,7 +54,6 @@ INSTALLED_APPS += [
 
 INSTALLED_APPS += [
     'api',
-    'converter',
 ]
 
 MIDDLEWARE = [
@@ -64,7 +66,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'backend.urls'
+ROOT_URLCONF = 'api.urls'
 
 TEMPLATES = [
     {
@@ -147,3 +149,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+BASE_URL = os.getenv('BASE_URL')
+API_KEY = os.getenv('API_KEY')
