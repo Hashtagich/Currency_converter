@@ -68,31 +68,31 @@ class CurrencyService:
                 if rate is None:
                     raise CurrencyServiceException(
                         status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-                        detail=f"Failed to retrieve exchange rate for {from_currency} to {to_currency}"
+                        detail=f"Не удалось получить обменный курс для {from_currency} на {to_currency}"
                     )
                 return rate
             else:
                 raise CurrencyServiceException(
                     status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                    detail=f"External API error: {data.get('error-type')}"
+                    detail=f"Ошибка внешнего API: {data.get('тип ошибки')}"
                 )
         except HTTPError as e:
             logger.error(f"HTTP error from external API: {e}")
             raise CurrencyServiceException(
                 status_code=e.response.status_code,
-                detail=f"Error retrieving data from external API: {e}"
+                detail=f"Ошибка при извлечении данных из внешнего API: {e}"
             )
 
         except requests.exceptions.RequestException as e:
             logger.error(f"Currency service unavailable: {e}")
             raise CurrencyServiceException(
                 status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-                detail=f"Currency service unavailable. Please try again later."
+                detail=f"Услуга обмена валюты недоступна. Пожалуйста, повторите попытку позже."
             )
 
         except Exception as e:
             logger.error(f"An unexpected error occurred: {e}")
             raise CurrencyServiceException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail=f"An unexpected error occurred. Please try again later."
+                detail=f"Произошла непредвиденная ошибка. Пожалуйста, повторите попытку позже."
             )
