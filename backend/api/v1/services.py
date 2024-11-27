@@ -37,10 +37,6 @@ class CurrencyService:
         "ZMW", "ZWL"
     }
 
-    def __init__(self):
-        self.base_url = settings.BASE_URL
-        self.api_key = settings.API_KEY
-
     def check_currency(self, name_currency: str) -> bool:
         """
         Метод для проверки наличия названия валюты в множестве(set) для запроса.
@@ -50,7 +46,8 @@ class CurrencyService:
         result = name_currency.upper() in self.DB_VALUES
         return result
 
-    def get_exchange_rate(self, from_currency: str, to_currency: str) -> float:
+    @staticmethod
+    def get_exchange_rate(from_currency: str, to_currency: str) -> float:
         """
         Метод для запроса курса валют у стороннего сервиса.
         :param from_currency: Название валюты, из которой конвертируем (строка).
@@ -58,8 +55,9 @@ class CurrencyService:
         :return: Курс обмена (float) между from_currency и to_currency.
         """
         try:
-            url = f"{self.base_url}/{self.api_key}/pair/{from_currency}/{to_currency}"
-            response = requests.get(url, timeout=10)
+            url = f"{settings.BASE_URL}/{settings.API_KEY}/pair/{from_currency}/{to_currency}"
+
+            response = requests.get(url)
             response.raise_for_status()  # Проверка на ошибки HTTP
             data = response.json()
 

@@ -167,6 +167,7 @@ class CurrencyConverterView(APIView):
 
         try:
             value = float(value)
+
         except ValueError:
             return Response(
                 data={
@@ -176,17 +177,22 @@ class CurrencyConverterView(APIView):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        # cache_key = f'exchange_rate_{from_currency}_{to_currency}_{value}'
-        # cached_result = cache.get(cache_key)
-        #
-        # if cached_result:
-        #     return Response({'result': cached_result})
+        cache_key = f'exchange_rate_{from_currency}_{to_currency}_{value}'
+
+        cached_result = cache.get(cache_key)
+
+        if cached_result:
+            logger.info(f'Кэшированный результат для ключа {cache_key} был возвращен.')
+
+            return Response({'result': cached_result})
 
         try:
+
             exchange_rate = currency_service.get_exchange_rate(from_currency=from_currency, to_currency=to_currency)
             result = round(exchange_rate * value, 2)
 
-            # cache.set(cache_key, result, timeout=300)
+            cache.set(cache_key, result, timeout=300)
+            logger.info(f'Результат {result} для {cache_key} был сохранен в кэше.')
 
             return Response({'result': result})
         except CurrencyServiceException as e:
