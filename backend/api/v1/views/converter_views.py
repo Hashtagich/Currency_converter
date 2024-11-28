@@ -182,8 +182,6 @@ class CurrencyConverterView(APIView):
         cached_result = cache.get(cache_key)
 
         if cached_result:
-            logger.info(f'Кэшированный результат для ключа {cache_key} был возвращен.')
-
             return Response({'result': cached_result})
 
         try:
@@ -192,7 +190,6 @@ class CurrencyConverterView(APIView):
             result = round(exchange_rate * value, 2)
 
             cache.set(cache_key, result, timeout=300)
-            logger.info(f'Результат {result} для {cache_key} был сохранен в кэше.')
 
             return Response({'result': result})
         except CurrencyServiceException as e:

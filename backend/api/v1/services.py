@@ -57,7 +57,7 @@ class CurrencyService:
         try:
             url = f"{settings.BASE_URL}/{settings.API_KEY}/pair/{from_currency}/{to_currency}"
 
-            response = requests.get(url)
+            response = requests.get(url, timeout=10)
             response.raise_for_status()  # Проверка на ошибки HTTP
             data = response.json()
 
